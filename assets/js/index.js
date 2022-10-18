@@ -23,13 +23,9 @@ function converterPokemonNoHtml(pokemon){
 
 const pokemonListaRenderizada = document.getElementById('pokemonList')
 //fetch retorna uma promise(promessa de um resultado.)
-fetch(url)
-    .then((response)=> response.json())
-    .then((jsonBody)=> jsonBody.results)
-    .then((pokemonList)=> {
-        for (let i = 0; i < pokemonList.length; i++) {
-            const pokemon = pokemonList[i];
-            pokemonListaRenderizada.innerHTML += converterPokemonNoHtml(pokemon)
-        }
+
+// converter para uma lista HTML:
+pokeApi.getPokemons().then((pokemonList = [])=> {
+    pokemonListaRenderizada.innerHTML +=  pokemonList.map(converterPokemonNoHtml).join('')
+
     })
-    .catch((error)=> console.log(error))
