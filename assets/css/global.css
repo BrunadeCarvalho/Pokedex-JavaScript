@@ -12,10 +12,13 @@ body {
     height: 100vh;
     padding: 1rem;
     background-color: #fff;
-    text-align: center;
     color: #30a7d7;
 }
 
+.titulo{
+    text-align: center;
+
+}
 @media screen and (min-width: 992px) {
     .content {
         max-width: 992px;
