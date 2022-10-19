@@ -1,31 +1,37 @@
-const offset = 0 
-const limit = 10
-const url = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`
+const pokemonListaRenderizada = document.getElementById('pokemonList')
 
-function converterPokemonNoHtml(pokemon){
-    return `
-    <li class="pokemon">
-        <span class="number">#001</span>
-        <span class="name">${pokemon.name}</span>
+const loadMoreButton = document.getElementById('loadMoreButton')
 
-        <div class="detail">
-            <ol class="types">
-                <li class="type">grass</li>
-                <li class="type">poison</li>
-            </ol>
+const limit = 6
+let offset = 0
 
-            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/1.png" 
-            alt="${pokemon.name}" />
-        </div>
-    </li>
-`
+
+function loadPokemonItens(offset, limit){
+    pokeApi.getPokemons(offset, limit).then((pokemonList = [])=> {
+        const newHtml = pokemonList.map((pokemon)=>`
+            <li class="pokemon ${pokemon.type}" >
+                <span class="number">#${pokemon.number}</span>
+                <span class="name">${pokemon.name}</span>
+
+                <div class="detail">
+                    <ol class="types">
+                        ${pokemon.types.map((type)=> `<li class="type ${type}">${type}</li>`).join(" ")}
+                    </ol>
+
+                    <img src="${pokemon.photo}" 
+                    alt="${pokemon.name}" />
+                </div>
+            </li>
+            `
+        ).join(" ")
+        pokemonListaRenderizada.innerHTML = newHtml
+    })
 }
 
-const pokemonListaRenderizada = document.getElementById('pokemonList')
-//fetch retorna uma promise(promessa de um resultado.)
+loadPokemonItens(offset, limit)
 
+loadMoreButton.addEventListener('click', () =>{
+    offset += limit 
+    loadPokemonItens(offset, limit)
+})
 // converter para uma lista HTML:
-pokeApi.getPokemons().then((pokemonList = [])=> {
-    pokemonListaRenderizada.innerHTML +=  pokemonList.map(converterPokemonNoHtml).join('')
-
-    })
