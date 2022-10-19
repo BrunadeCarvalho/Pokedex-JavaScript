@@ -1,35 +1,37 @@
-const offset = 0 
-const limit = 10
-const url = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`
-
-function converterPokemonTypesToLis(pokemonTypes){
-    return pokemonTypes.map((typeSlopt)=> `<li class="type">${typeSlopt.type.name}</li>`)
-
-}
-
-function converterPokemonNoHtml(pokemon){
-    return `
-    <li class="pokemon">
-        <span class="number">#${pokemon.order}</span>
-        <span class="name">${pokemon.name}</span>
-
-        <div class="detail">
-            <ol class="types">
-                ${converterPokemonTypesToLis(pokemon.types).join(' ')}
-            </ol>
-
-            <img src="${pokemon.sprites.other.home.front_default}" 
-            alt="${pokemon.name}" />
-        </div>
-    </li>
-`
-}
-
 const pokemonListaRenderizada = document.getElementById('pokemonList')
-//fetch retorna uma promise(promessa de um resultado.)
 
-// converter para uma lista HTML:
-pokeApi.getPokemons().then((pokemonList = [])=> {
-    pokemonListaRenderizada.innerHTML +=  pokemonList.map(converterPokemonNoHtml).join('')
+const loadMoreButton = document.getElementById('loadMoreButton')
 
+const limit = 8
+let offset = 0
+
+
+function loadPokemonItens(offset, limit){
+    pokeApi.getPokemons(offset, limit).then((pokemonList = [])=> {
+        const newHtml = pokemonList.map((pokemon)=>`
+            <li class="pokemon ${pokemon.type}" >
+                <span class="number">#${pokemon.number}</span>
+                <span class="name">${pokemon.name}</span>
+
+                <div class="detail">
+                    <ol class="types">
+                        ${pokemon.types.map((type)=> `<li class="type ${type}">${type}</li>`).join(" ")}
+                    </ol>
+
+                    <img src="${pokemon.photo}" 
+                    alt="${pokemon.name}" />
+                </div>
+            </li>
+            `
+        ).join(" ")
+        pokemonListaRenderizada.innerHTML = newHtml
     })
+}
+
+loadPokemonItens(offset, limit)
+
+loadMoreButton.addEventListener('click', () =>{
+    offset += limit 
+    loadPokemonItens(offset, limit)
+})
+// converter para uma lista HTML:
