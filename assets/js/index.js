@@ -2,7 +2,7 @@ const pokemonListaRenderizada = document.getElementById('pokemonList')
 
 const loadMoreButton = document.getElementById('loadMoreButton')
 
-const limit = 8
+const limit = 6
 let offset = 0
 
 
